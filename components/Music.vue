@@ -1,20 +1,23 @@
 <template>
   <main class="main">
     <button
-        class="musicBtn"
-        @click="musicStart"
-    >
-        Music
-    </button>
-    <button
         class="startBtn"
         @click="appStart"
         v-if="isStarted==false">
         Start!
     </button>
     <section
+        @mousedown="ringStart"
+        @touchstart="ringStart"
+        @mouseup="ringStop"
+        @touchend="ringStop"
+        @mouseleave="ringStop"
+        @touchleave="ringStop"
+        @mousemove="ring"
+        @touchmove="ring"
         class="touchZone"
-        v-else>
+        v-else
+    >
     </section>
   </main>
 </template>
@@ -25,16 +28,34 @@ import Tone from 'tone'
 export default {
   data() {
     return {
-      isStarted: false
-    }
+      isStarted: false,
+      synth: null, // シンセサイザー
+      isRings: false // 今シンセサイザーが鳴っているかを表す
+    };
   },
   methods: {
+    // スタートボタンが押されたら発火
     appStart() {
-      this.isStarted = true
+      this.isStarted = true;
+      this.synth = new Tone.MonoSynth().toMaster();
     },
-    musicStart() {
-        var synth = new Tone.Synth().toMaster()
-        synth.triggerAttackRelease('C4', '8n')
+    // マウスクリック時
+    ringStart() {
+      this.isRings = true;
+      this.ring()
+    },
+    // マウスクリック終了 または マウスが画面を離れた時
+    ringStop() {
+      this.isRings = false;
+      this.ring()
+    },
+    // isRings時の処理
+    ring() {
+      if (this.isRings) {
+        this.synth.triggerAttack("C3");
+      } else {
+        this.synth.triggerRelease();
+      }
     }
   }
 }
@@ -48,7 +69,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.musicBtn,
+
 .startBtn {
   padding: 10px 20px;
 }
