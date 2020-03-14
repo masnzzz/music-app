@@ -16,6 +16,7 @@
         @mousemove="ring"
         @touchmove="ring"
         class="touchZone"
+        id="touchZone"
         v-else
     >
     </section>
@@ -42,17 +43,21 @@ export default {
     // マウスクリック時
     ringStart() {
       this.isRings = true;
-      this.ring()
+      this.ring();
     },
     // マウスクリック終了 または マウスが画面を離れた時
     ringStop() {
       this.isRings = false;
-      this.ring()
+      this.ring();
     },
     // isRings時の処理
     ring(event) {
 
+      /** 音量の最小値 値は 0 ~ -36 の間で動く */
+      const minVol = -36;
+      /** x軸の座標 */
       var x = 0;
+      /** y軸の座標 */
       var y = 0;
 
       if (typeof event !== "undefined") {
@@ -68,6 +73,16 @@ export default {
       }
 
       console.log(x, y);
+
+      /** touchZoneの高さを取得 */
+      const height = document.getElementById("touchZone").clientHeight;
+
+      /** 現在の音量 */
+      const currentVol = Math.round( (y / height) * minVol );
+
+      console.log(currentVol);
+
+      this.synth.volume.value = currentVol;
 
       if (this.isRings) {
         this.synth.triggerAttack("C3");
