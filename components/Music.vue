@@ -50,7 +50,25 @@ export default {
       this.ring()
     },
     // isRings時の処理
-    ring() {
+    ring(event) {
+
+      var x = 0;
+      var y = 0;
+
+      if (typeof event !== "undefined") {
+          if (typeof event.touches !== "undefined" && event.touches.length > 0) {
+              // スマートフォンと判断する
+              x = - event.touches[0].clientX;
+              y = event.touches[0].clientY;
+          } else {
+              // マウスだと判断する
+              x = event.clientX;
+              y = event.clientY;
+          }
+      }
+
+      console.log(x, y);
+
       if (this.isRings) {
         this.synth.triggerAttack("C3");
       } else {
