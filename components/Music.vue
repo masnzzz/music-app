@@ -55,6 +55,8 @@ export default {
 
       /** 音量の最小値 値は 0 ~ -36 の間で動く */
       const minVol = -36;
+      const minFreq = new Tone.Frequency("E1").toFrequency();
+      const maxFreq = new Tone.Frequency("E5").toFrequency();
       /** x軸の座標 */
       var x = 0;
       /** y軸の座標 */
@@ -84,8 +86,16 @@ export default {
 
       this.synth.volume.value = currentVol;
 
+      /** touchZoneの横を取得 */
+      const width = document.getElementById("touchZone").clientWidth;
+
+      /** 現在の音程 */
+      const currentFreq = Math.round((x * (maxFreq - minFreq)) / width) + minFreq;
+
+      console.log(currentFreq);
+
       if (this.isRings) {
-        this.synth.triggerAttack("C3");
+        this.synth.triggerAttack(currentFreq);
       } else {
         this.synth.triggerRelease();
       }
