@@ -52,10 +52,11 @@ export default {
     },
     // isRings時の処理
     ring(event) {
-
       /** 音量の最小値 値は 0 ~ -36 の間で動く */
       const minVol = -36;
+      /** 音程の最小値 */
       const minFreq = new Tone.Frequency("E1").toFrequency();
+      /** 音程の最大値 */
       const maxFreq = new Tone.Frequency("E5").toFrequency();
       /** x軸の座標 */
       var x = 0;
